@@ -26,6 +26,7 @@ services:
       - "jupyterhub-data:/data"
     ports:
       - "8000:8000"
+      - "8443:443"
     environment:
       # This username will be a JupyterHub admin
       JUPYTERHUB_ADMIN: admin

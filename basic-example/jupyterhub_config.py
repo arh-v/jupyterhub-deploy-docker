@@ -4,11 +4,19 @@
 # Configuration file for JupyterHub
 import os
 
+SSL_KEY_PATH = '/srv/jupyterhub/domain.key'
+SSL_CERT_PATH = '/srv/jupyterhub/jupyterhub.crt'
+
 c = get_config()  # noqa: F821
 
 # We rely on environment variables to configure JupyterHub so that we
 # avoid having to rebuild the JupyterHub container every time we change a
 # configuration parameter.
+if os.path.exists(SSL_KEY_PATH):
+    c.JupyterHub.ssl_key = SSL_KEY_PATH
+if os.path.exists(SSL_CERT_PATH):
+    c.JupyterHub.ssl_cert = SSL_CERT_PATH
+    c.JupyterHub.port = 443
 
 # Spawn single-user servers as Docker containers
 c.JupyterHub.spawner_class = "dockerspawner.DockerSpawner"
