@@ -1,0 +1,1 @@
+docker build --build-arg VERSION=latest -t arhv/onedl-mmdet-jupyterhub:latest .

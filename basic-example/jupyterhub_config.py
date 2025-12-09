@@ -14,7 +14,12 @@ c = get_config()  # noqa: F821
 c.JupyterHub.spawner_class = "dockerspawner.DockerSpawner"
 
 # Spawn containers from this image
-c.DockerSpawner.image = os.environ["DOCKER_NOTEBOOK_IMAGE"]
+#c.DockerSpawner.image = os.environ["DOCKER_NOTEBOOK_IMAGE"]
+c.DockerSpawner.allowed_images = {
+    'OneDL MMDetection': 'arhv/onedl-mmdet-jupyterhub:latest',
+    'Python Standard (latest)': 'quay.io/jupyter/base-notebook:latest',
+    'Ultralytics': 'arhv/ultralytics-jupyterhub:latest'
+}
 
 # Connect containers to this Docker network
 network_name = os.environ["DOCKER_NETWORK_NAME"]
@@ -37,6 +42,10 @@ c.DockerSpawner.remove = True
 
 # For debugging arguments passed to spawned containers
 c.DockerSpawner.debug = True
+
+c.DockerSpawner.extra_host_config = {
+    'runtime': 'nvidia' 
+}
 
 # User containers will access hub by container name on the Docker network
 c.JupyterHub.hub_ip = "jupyterhub"
