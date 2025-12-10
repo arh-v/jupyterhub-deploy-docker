@@ -25,8 +25,8 @@ c.JupyterHub.spawner_class = "dockerspawner.DockerSpawner"
 #c.DockerSpawner.image = os.environ["DOCKER_NOTEBOOK_IMAGE"]
 c.DockerSpawner.allowed_images = {
     'OneDL MMDetection': 'arhv/onedl-mmdet-jupyterhub:latest',
-    'Python Standard (latest)': 'quay.io/jupyter/base-notebook:latest',
-    'Ultralytics': 'arhv/ultralytics-jupyterhub:latest'
+    'Ultralytics': 'arhv/ultralytics-jupyterhub:latest',
+    'Tensorflow': 'quay.io/jupyter/tensorflow-notebook:cuda-latest'
 }
 
 # Connect containers to this Docker network
@@ -45,6 +45,22 @@ c.DockerSpawner.notebook_dir = notebook_dir
 # notebook directory in the container
 c.DockerSpawner.volumes = {"jupyterhub-user-{username}": notebook_dir}
 
+c.DockerSpawner.environment = {
+    "CHOWN_HOME": "yes",
+    "CHOWN_EXTRA": "/home/jovyan",
+    "CHOWN_HOME_OPTS": "-R",
+    "NB_UID": 1000,
+    "NB_GID": 100
+}
+
+c.DockerSpawner.extra_host_config = {
+    'network_mode': network_name,
+    'cpuset_cpus': '0-12',
+    'mem_limit': '16384m',
+    'memswap_limit': '2048m',
+    'shm_size': '2g',
+    'ipc': 'host'
+}
 # Remove containers once they are stopped
 c.DockerSpawner.remove = True
 
@@ -76,3 +92,13 @@ c.NativeAuthenticator.open_signup = True
 admin = os.environ.get("JUPYTERHUB_ADMIN")
 if admin:
     c.Authenticator.admin_users = [admin]
+
+c.FileContentsManager.always_delete_dir = True
+c.FileContentsManager.delete_to_trash = False
+c.AsyncFileContentsManager.delete_to_trash = False
+c.AsyncFileContentsManager.always_delete_dir = True
+c.ContentsManager.allow_hidden = True
+c.FileContentsManager.allow_hidden = True
+c.AsyncContentsManager.allow_hidden = True
+c.AsyncFileContentsManager.allow_hidden = True
+
