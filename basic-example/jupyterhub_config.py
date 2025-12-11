@@ -55,11 +55,11 @@ c.DockerSpawner.environment = {
 
 c.DockerSpawner.extra_host_config = {
     'network_mode': network_name,
-    'cpuset_cpus': '0-12',
+    'cpuset_cpus': '0-11',
     'mem_limit': '16384m',
-    'memswap_limit': '2048m',
+    'memswap_limit': '32g',
     'shm_size': '2g',
-    'ipc': 'host'
+    'runtime': 'nvidia'
 }
 # Remove containers once they are stopped
 c.DockerSpawner.remove = True
@@ -67,9 +67,7 @@ c.DockerSpawner.remove = True
 # For debugging arguments passed to spawned containers
 c.DockerSpawner.debug = True
 
-c.DockerSpawner.extra_host_config = {
-    'runtime': 'nvidia' 
-}
+c.DockerSpawner.extra_create_kwargs = {'runtime': 'nvidia'}
 
 # User containers will access hub by container name on the Docker network
 c.JupyterHub.hub_ip = "jupyterhub"
